@@ -14,13 +14,13 @@ class HandlerCollection implements Countable, IteratorAggregate
 {
 
     /**
-     * @var HandlerInterface[]
+     * @var AbstractHandler[]
      */
     protected $handlers;
 
     /**
      * HandlerCollection constructor.
-     * @param HandlerInterface[] $handles
+     * @param AbstractHandler[] $handles
      */
     public function __construct(array $handles)
     {
@@ -29,7 +29,7 @@ class HandlerCollection implements Countable, IteratorAggregate
         }
     }
 
-    public function add(HandlerInterface $handler)
+    public function add(AbstractHandler $handler)
     {
         $this->handlers[] = $handler;
     }

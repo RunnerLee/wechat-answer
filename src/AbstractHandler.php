@@ -7,32 +7,39 @@
 
 namespace Runner\WechatAnswer;
 
-use EasyWeChat\Message\AbstractMessage;
-
-interface HandlerInterface
+abstract class AbstractHandler
 {
 
-    /**
-     * @return string
-     */
-    public function name();
+    protected $name;
+
+    protected $description;
 
     /**
      * @return string
      */
-    public function description();
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function description()
+    {
+        return $this->description;
+    }
 
     /**
      * @param string $message
      * @return bool
      */
-    public function match($message);
+    abstract public function match($message);
 
     /**
      * @param $message
      * @param Dispatcher $dispatcher
      * @return mixed
      */
-    public function handle($message, Dispatcher $dispatcher);
-
+    abstract public function handle($message, Dispatcher $dispatcher);
 }
