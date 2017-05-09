@@ -7,10 +7,10 @@
 
 namespace Runner\WechatAnswer;
 
+use EasyWeChat\Message\AbstractMessage;
 use EasyWeChat\Message\Text;
 use EasyWeChat\Support\Collection;
 use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
-use EasyWeChat\Message\AbstractMessage;
 
 class Dispatcher
 {
