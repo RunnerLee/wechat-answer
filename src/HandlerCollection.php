@@ -7,14 +7,15 @@
 
 namespace Runner\WechatAnswer;
 
-use Countable, ArrayIterator, IteratorAggregate;
+use ArrayIterator;
+use Countable;
 use EasyWeChat\Support\Collection;
+use IteratorAggregate;
 use Runner\WechatAnswer\Exceptions\MessageTypeNotSupportedException;
 use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
 
 class HandlerCollection implements Countable, IteratorAggregate
 {
-
     /**
      * @var array
      */
@@ -40,6 +41,7 @@ class HandlerCollection implements Countable, IteratorAggregate
 
     /**
      * @param Collection $message
+     *
      * @return AbstractMessageHandler
      */
     public function match(Collection $message)
@@ -54,6 +56,7 @@ class HandlerCollection implements Countable, IteratorAggregate
             if (!$handler->match($content)) {
                 continue;
             }
+
             return $handler;
         }
 

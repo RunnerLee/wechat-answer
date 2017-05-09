@@ -5,14 +5,13 @@
  * @email: runnerleer@gmail.com
  * @time: 2017-05
  */
-
 use Runner\WechatAnswer\AbstractMessageHandler;
 
 class BetaHandler extends AbstractMessageHandler
 {
-
     /**
      * @param \EasyWeChat\Support\Collection $message
+     *
      * @return \EasyWeChat\Message\AbstractMessage|string
      */
     public function handle(\EasyWeChat\Support\Collection $message)
@@ -22,6 +21,7 @@ class BetaHandler extends AbstractMessageHandler
 
     /**
      * @param string $message
+     *
      * @return bool
      */
     public function match($message)

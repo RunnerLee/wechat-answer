@@ -13,7 +13,6 @@ use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
 
 class Dispatcher
 {
-
     /**
      * @var HandlerCollection
      */
@@ -31,6 +30,7 @@ class Dispatcher
 
     /**
      * Dispatcher constructor.
+     *
      * @param HandlerCollection $handlers
      */
     public function __construct(HandlerCollection $handlers)
@@ -40,6 +40,7 @@ class Dispatcher
 
     /**
      * @param HandlerInterface $handler
+     *
      * @return $this
      */
     public function setDefaultHandler(HandlerInterface $handler)
@@ -51,6 +52,7 @@ class Dispatcher
 
     /**
      * @param HandlerInterface $handler
+     *
      * @return $this
      */
     public function setExceptionHandler(HandlerInterface $handler)
@@ -63,14 +65,12 @@ class Dispatcher
     public function dispatch(Collection $message)
     {
         try {
-
             $handler = $this->handlers->match($message);
             $response = $handler->handle($message, $this);
-
         } catch (\Exception $e) {
             if (($e instanceof NotHandlerMatchedException) && !is_null($this->defaultHandler)) {
                 $response = $this->defaultHandler->handle($message);
-            } elseif (!is_null($this->exceptionHandler))  {
+            } elseif (!is_null($this->exceptionHandler)) {
                 $response = $this->exceptionHandler->handle($message);
             }
         }

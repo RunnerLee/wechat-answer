@@ -12,7 +12,6 @@ use EasyWeChat\Support\Collection;
 
 abstract class AbstractMessageHandler implements HandlerInterface
 {
-
     protected $name;
 
     protected $description;
@@ -35,12 +34,14 @@ abstract class AbstractMessageHandler implements HandlerInterface
 
     /**
      * @param string $message
+     *
      * @return bool
      */
     abstract public function match($message);
 
     /**
      * @param Collection $message
+     *
      * @return AbstractMessage|string
      */
     abstract public function handle(Collection $message);

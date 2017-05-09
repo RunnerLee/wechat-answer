@@ -12,9 +12,9 @@ use EasyWeChat\Support\Collection;
 
 interface HandlerInterface
 {
-
     /**
      * @param Collection $message
+     *
      * @return AbstractMessage|string
      */
     public function handle(Collection $message);
