@@ -10,6 +10,7 @@ namespace Runner\WechatAnswer;
 use EasyWeChat\Message\Text;
 use EasyWeChat\Support\Collection;
 use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
+use EasyWeChat\Message\AbstractMessage;
 
 class Dispatcher
 {
@@ -62,6 +63,11 @@ class Dispatcher
         return $this;
     }
 
+    /**
+     * @param Collection $message
+     *
+     * @return AbstractMessage
+     */
     public function dispatch(Collection $message)
     {
         try {
