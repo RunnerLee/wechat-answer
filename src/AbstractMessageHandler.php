@@ -7,7 +7,10 @@
 
 namespace Runner\WechatAnswer;
 
-abstract class AbstractHandler
+use EasyWeChat\Message\AbstractMessage;
+use EasyWeChat\Support\Collection;
+
+abstract class AbstractMessageHandler implements HandlerInterface
 {
 
     protected $name;
@@ -37,9 +40,8 @@ abstract class AbstractHandler
     abstract public function match($message);
 
     /**
-     * @param $message
-     * @param Dispatcher $dispatcher
-     * @return mixed
+     * @param Collection $message
+     * @return AbstractMessage|string
      */
-    abstract public function handle($message, Dispatcher $dispatcher);
+    abstract public function handle(Collection $message);
 }

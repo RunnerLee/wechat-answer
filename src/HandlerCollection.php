@@ -8,42 +8,56 @@
 namespace Runner\WechatAnswer;
 
 use Countable, ArrayIterator, IteratorAggregate;
+use EasyWeChat\Support\Collection;
+use Runner\WechatAnswer\Exceptions\MessageTypeNotSupportedException;
 use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
 
 class HandlerCollection implements Countable, IteratorAggregate
 {
 
     /**
-     * @var AbstractHandler[]
+     * @var array
      */
     protected $handlers;
 
     /**
-     * HandlerCollection constructor.
-     * @param AbstractHandler[] $handles
+     * @var array
      */
-    public function __construct(array $handles)
+    protected $supportedMessageType = [
+        'event',
+        'text',
+    ];
+
+    public function add($type, AbstractMessageHandler $handler)
     {
-        foreach ($handles as $handle) {
-            $this->add($handle);
+        if (!$this->validateMessageTypeSupported($type)) {
+            throw new MessageTypeNotSupportedException();
         }
+        $this->handlers[$type][] = $handler;
+
+        return $this;
     }
 
-    public function add(AbstractHandler $handler)
+    /**
+     * @param Collection $message
+     * @return AbstractMessageHandler
+     */
+    public function match(Collection $message)
     {
-        $this->handlers[] = $handler;
-    }
+        if (!$this->validateMessageTypeSupported($message->get('MsgType'))) {
+            throw new MessageTypeNotSupportedException();
+        }
 
-    public function match($message)
-    {
-        foreach ($this->handlers as $handler) {
-            if (!$handler->match($message)) {
+        $content = $this->getMessageContent($message);
+
+        foreach ($this->handlers[$message->get('MsgType')] as $handler) {
+            if (!$handler->match($content)) {
                 continue;
             }
             return $handler;
         }
 
-        throw new NotHandlerMatchedException("message: {$message}");
+        throw new NotHandlerMatchedException("message: {$content}");
     }
 
     /**
@@ -57,5 +71,20 @@ class HandlerCollection implements Countable, IteratorAggregate
     public function count()
     {
         return count($this->handlers);
+    }
+
+    protected function validateMessageTypeSupported($type)
+    {
+        return false !== array_search($type, $this->supportedMessageType);
+    }
+
+    protected function getMessageContent(Collection $message)
+    {
+        switch ($message->get('MsgType')) {
+            case 'event':
+                return $message->get('EventKey');
+            default:
+                return $message->get('Content');
+        }
     }
 }

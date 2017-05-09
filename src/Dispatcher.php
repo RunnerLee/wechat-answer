@@ -8,24 +8,76 @@
 namespace Runner\WechatAnswer;
 
 use EasyWeChat\Message\Text;
+use EasyWeChat\Support\Collection;
+use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
 
 class Dispatcher
 {
 
+    /**
+     * @var HandlerCollection
+     */
     protected $handlers;
 
-    public function __construct(array $handlers)
+    /**
+     * @var HandlerInterface
+     */
+    protected $defaultHandler;
+
+    /**
+     * @var HandlerInterface
+     */
+    protected $exceptionHandler;
+
+    /**
+     * Dispatcher constructor.
+     * @param HandlerCollection $handlers
+     */
+    public function __construct(HandlerCollection $handlers)
     {
-        $this->handlers = new HandlerCollection($handlers);
+        $this->handlers = $handlers;
     }
 
-    public function dispatch($message)
+    /**
+     * @param HandlerInterface $handler
+     * @return $this
+     */
+    public function setDefaultHandler(HandlerInterface $handler)
     {
-        $handler = $this->handlers->match($message);
+        $this->defaultHandler = $handler;
 
-        $response = $handler->handle($message, $this);
+        return $this;
+    }
 
-        is_string($response) && $response = new Text($_FILES);
+    /**
+     * @param HandlerInterface $handler
+     * @return $this
+     */
+    public function setExceptionHandler(HandlerInterface $handler)
+    {
+        $this->exceptionHandler = $handler;
+
+        return $this;
+    }
+
+    public function dispatch(Collection $message)
+    {
+        try {
+
+            $handler = $this->handlers->match($message);
+            $response = $handler->handle($message, $this);
+
+        } catch (\Exception $e) {
+            if (($e instanceof NotHandlerMatchedException) && !is_null($this->defaultHandler)) {
+                $response = $this->defaultHandler->handle($message);
+            } elseif (!is_null($this->exceptionHandler))  {
+                $response = $this->exceptionHandler->handle($message);
+            }
+        }
+
+        is_string($response) && $response = new Text([
+            'content' => $response,
+        ]);
 
         return $response;
     }
