@@ -4,12 +4,10 @@
  * @email: runnerleer@gmail.com
  * @time: 2017-04
  */
-
 use Runner\WechatAnswer\Dispatcher;
 
 class DispatcherTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var Dispatcher
      */
@@ -17,11 +15,10 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
-        include_once __DIR__ . '/Handlers/AlphaHandler.php';
-        include_once __DIR__ . '/Handlers/BetaHandler.php';
-        include_once __DIR__ . '/Handlers/DefaultHandler.php';
-        include_once __DIR__ . '/Handlers/ExceptionHandler.php';
+        include_once __DIR__.'/Handlers/AlphaHandler.php';
+        include_once __DIR__.'/Handlers/BetaHandler.php';
+        include_once __DIR__.'/Handlers/DefaultHandler.php';
+        include_once __DIR__.'/Handlers/ExceptionHandler.php';
 
         $collection = new \Runner\WechatAnswer\HandlerCollection();
 
@@ -66,5 +63,4 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('something wrong.', $response->get('content'));
     }
-
 }
