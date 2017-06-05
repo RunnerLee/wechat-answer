@@ -11,4 +11,5 @@ use RuntimeException;
 
 class NotHandlerMatchedException extends RuntimeException
 {
+
 }

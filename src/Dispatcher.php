@@ -7,83 +7,25 @@
 
 namespace Runner\WechatAnswer;
 
-use EasyWeChat\Message\AbstractMessage;
 use EasyWeChat\Message\Text;
-use EasyWeChat\Support\Collection;
-use Runner\WechatAnswer\Exceptions\NotHandlerMatchedException;
 
 class Dispatcher
 {
-    /**
-     * @var HandlerCollection
-     */
+
     protected $handlers;
 
-    /**
-     * @var HandlerInterface
-     */
-    protected $defaultHandler;
-
-    /**
-     * @var HandlerInterface
-     */
-    protected $exceptionHandler;
-
-    /**
-     * Dispatcher constructor.
-     *
-     * @param HandlerCollection $handlers
-     */
-    public function __construct(HandlerCollection $handlers)
+    public function __construct(array $handlers)
     {
-        $this->handlers = $handlers;
+        $this->handlers = new HandlerCollection($handlers);
     }
 
-    /**
-     * @param HandlerInterface $handler
-     *
-     * @return $this
-     */
-    public function setDefaultHandler(HandlerInterface $handler)
+    public function dispatch($message)
     {
-        $this->defaultHandler = $handler;
+        $handler = $this->handlers->match($message);
 
-        return $this;
-    }
+        $response = $handler->handle($message, $this);
 
-    /**
-     * @param HandlerInterface $handler
-     *
-     * @return $this
-     */
-    public function setExceptionHandler(HandlerInterface $handler)
-    {
-        $this->exceptionHandler = $handler;
-
-        return $this;
-    }
-
-    /**
-     * @param Collection $message
-     *
-     * @return AbstractMessage
-     */
-    public function dispatch(Collection $message)
-    {
-        try {
-            $handler = $this->handlers->match($message);
-            $response = $handler->handle($message, $this);
-        } catch (\Exception $e) {
-            if (($e instanceof NotHandlerMatchedException) && !is_null($this->defaultHandler)) {
-                $response = $this->defaultHandler->handle($message);
-            } elseif (!is_null($this->exceptionHandler)) {
-                $response = $this->exceptionHandler->handle($message);
-            }
-        }
-
-        is_string($response) && $response = new Text([
-            'content' => $response,
-        ]);
+        is_string($response) && $response = new Text($_FILES);
 
         return $response;
     }
