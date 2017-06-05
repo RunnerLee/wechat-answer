@@ -25,7 +25,7 @@ class Dispatcher
 
         $response = $handler->handle($message, $this);
 
-        is_string($response) && $response = new Text($_FILES);
+        is_string($response) && $response = new Text($response);
 
         return $response;
     }
